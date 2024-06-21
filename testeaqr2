@@ -1,0 +1,123 @@
+Algoritmo GerenciamentoFilaHospital
+
+// Declaração de variáveis globais
+const
+    MAX_PACIENTES = 50 // Tamanho máximo da fila de pacientes
+
+registro Paciente
+    nome: caractere[50]
+    idade: inteiro
+    queixa: caractere[100]
+    prioridade: caractere // 'grave', 'médio' ou 'leve'
+
+var
+    filaPacientes: vetor[1..MAX_PACIENTES] de Paciente
+    totalPacientes: inteiro <- 0
+
+// Procedimento para inserir um paciente na fila
+procedimento InserirPaciente()
+    var
+        novoPaciente: Paciente
+    início
+        se totalPacientes < MAX_PACIENTES então
+            limpar()
+            escreva("Digite o nome do paciente: ")
+            leia(novoPaciente.nome)
+            escreva("Digite a idade do paciente: ")
+            leia(novoPaciente.idade)
+            escreva("Digite a queixa do paciente: ")
+            leia(novoPaciente.queixa)
+            escreva("Digite a prioridade do paciente (grave/médio/leve): ")
+            leia(novoPaciente.prioridade)
+
+            // Inserir paciente na posição correta na fila
+            filaPacientes[totalPacientes + 1] <- novoPaciente
+            totalPacientes <- totalPacientes + 1
+
+            // Ordenar a fila com base na prioridade e idade
+            para i de totalPacientes até 2 passo -1 faça
+                se (filaPacientes[i].prioridade = 'grave' e filaPacientes[i-1].prioridade ≠ 'grave') ou
+                   (filaPacientes[i].idade > filaPacientes[i-1].idade e filaPacientes[i].prioridade = filaPacientes[i-1].prioridade) então
+                    // Trocar de posição na fila
+                    troca(filaPacientes[i], filaPacientes[i-1])
+
+            escreva("Paciente inserido na fila com sucesso!")
+        senão
+            escreva("Não é possível inserir mais pacientes. Fila cheia.")
+        fimse
+    fimprocedimento
+
+// Função para exibir a fila de pacientes
+função ExibirFila()
+    var
+        i: inteiro
+    início
+        limpar()
+        se totalPacientes = 0 então
+            escreva("Fila de pacientes vazia.")
+        senão
+            escreva("Fila de pacientes:")
+            para i de 1 até totalPacientes faça
+                escreva(i, ". Nome: ", filaPacientes[i].nome)
+                escreva("   Idade: ", filaPacientes[i].idade)
+                escreva("   Queixa: ", filaPacientes[i].queixa)
+                escreva("   Prioridade: ", filaPacientes[i].prioridade)
+                escreva("")
+            fimpara
+        fimse
+    fimfunção
+
+// Procedimento para chamar o próximo paciente da fila
+procedimento ChamarProximoPaciente()
+    início
+        se totalPacientes > 0 então
+            escreva("Próximo paciente a ser atendido:")
+            escreva("Nome: ", filaPacientes[1].nome)
+            escreva("Idade: ", filaPacientes[1].idade)
+            escreva("Queixa: ", filaPacientes[1].queixa)
+            escreva("Prioridade: ", filaPacientes[1].prioridade)
+            escreva("")
+            
+            // Remover o paciente da fila
+            para i de 1 até totalPacientes-1 faça
+                filaPacientes[i] <- filaPacientes[i + 1]
+            fimpara
+            totalPacientes <- totalPacientes - 1
+        senão
+            escreva("Não há pacientes na fila.")
+        fimse
+    fimprocedimento
+
+// Procedimento principal
+inicio
+    limpar()
+    repita
+        escreva("### Sistema de Gerenciamento de Fila de Hospital ###")
+        escreva("1 - Inserir paciente na fila")
+        escreva("2 - Exibir fila de pacientes")
+        escreva("3 - Chamar próximo paciente")
+        escreva("4 - Sair do sistema")
+        escreva("")
+        escreva("Escolha uma opção: ")
+        leia(opcao)
+        
+        escolha opcao
+            caso 1:
+                InserirPaciente()
+            caso 2:
+                ExibirFila()
+            caso 3:
+                ChamarProximoPaciente()
+            caso 4:
+                escreva("Saindo do sistema...")
+            outrocaso:
+                escreva("Opção inválida. Escolha novamente.")
+        fimescolha
+
+        escreva("")
+        escreva("Pressione ENTER para continuar...")
+        leia()
+        limpar()
+    até opcao = 4
+
+fimalgoritmo
